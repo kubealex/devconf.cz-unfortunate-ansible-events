@@ -1,0 +1,358 @@
+aap2_insights_credentials:
+  - name: DevConf Demo - Insights Credentials
+    insights_username: "{{ rhsm_account_username }}"
+    insights_password: "{{ rhsm_account_password }}"
+  # ------------------------------------
+  # ------------------------------------
+
+aap2_projects:
+  - name: "DevConf Demo"
+    scm_url: "https://github.com/kubealex/devconf.cz-ansible-events"
+    scm_branch: "main"
+  # ------------------------------------
+  # ------------------------------------
+
+  - name: "DevConf Demo - Insights"
+    scm_url: "https://cloud.redhat.com"
+    scm_credential: "DevConf Demo - Insights Credentials"
+    scm_type: "insights"
+  # ------------------------------------
+  # ------------------------------------
+
+aap2_machine_credentials:
+  - name: DevConf Demo - Linux Credentials
+    username: sysadmin
+    password: redhat
+  # ------------------------------------
+  # ------------------------------------
+
+aap2_custom_credentials:
+  - credential_type: DevConf Demo - ServiceNow Auth
+    name: DevConf Demo - ServiceNow Credentials
+    credential_type_inputs:
+      fields:
+        - id: snow_url
+          type: string
+          label: "ServiceNow URL"
+          secret: false
+        - id: snow_user
+          type: string
+          label: "ServiceNow username"
+          secret: false
+        - id: snow_pwd
+          type: string
+          label: "ServiceNow password"
+          secret: true
+      required:
+        - snow_url
+        - snow_user
+        - snow_pwd
+    credential_type_injectors:
+      extra_vars:
+        snow_instance: !unsafe "{{ snow_url }}"
+        snow_username: !unsafe "{{ snow_user }}"
+        snow_password: !unsafe "{{ snow_pwd }}"
+    credential_inputs:
+      snow_url: "{{ servicenow_instance_url }}"
+      snow_user: "{{ servicenow_instance_username }}"
+      snow_pwd: "{{ servicenow_instance_password }}"
+  # ------------------------------------
+  - credential_type: DevConf Demo - OCP Auth
+    name: DevConf Demo - OCP Credentials
+    credential_type_inputs:
+      fields:
+        - id: ocp_admin_username
+          type: string
+          label: "OCP Username"
+          secret: false
+        - id: ocp_admin_password
+          type: string
+          label: "OCP Password"
+          secret: true
+        - id: ocp_api_url
+          type: string
+          label: "OCP API URL"
+          secret: false
+      required:
+        - ocp_api_url
+        - ocp_username
+        - ocp_admin_password
+    credential_type_injectors:
+      extra_vars:
+        ocp_api_url: !unsafe "{{ ocp_api_url }}"
+        ocp_admin_username: !unsafe "{{ ocp_admin_username }}"
+        ocp_admin_password: !unsafe "{{ ocp_admin_password }}"
+    credential_inputs:
+      ocp_api_url: "{{ openshift_api_url }}"
+      ocp_admin_username: "{{ openshift_admin_username }}"
+      ocp_admin_password: "{{ openshift_admin_password }}"
+  # ------------------------------------
+  - credential_type: DevConf Demo - RHSM Auth
+    name: DevConf Demo - RHSM Credentials
+    credential_type_inputs:
+      fields:
+        - id: rhsm_user
+          type: string
+          label: RHSM Username
+          secret: false
+        - id: rhsm_password
+          type: string
+          label: RHSM Password
+          secret: true
+      required:
+        - rhsm_user
+        - rhsm_password
+    credential_type_injectors:
+      extra_vars:
+        rhsm_user: !unsafe "{{ rhsm_user }}"
+        rhsm_password: !unsafe "{{ rhsm_password }}"
+      env:
+        INSIGHTS_USER: !unsafe "{{ rhsm_user }}"
+        INSIGHTS_PASSWORD: !unsafe "{{ rhsm_password }}"
+    credential_inputs:
+      rhsm_user: "{{ rhsm_account_username }}"
+      rhsm_password: "{{ rhsm_account_password }}"
+  # ------------------------------------
+  - credential_type: DevConf Demo - Controller Auth
+    credential_type_inputs:
+      fields:
+        - id: aap2_url
+          type: string
+          label: "AAP2 Controller URL"
+          secret: false
+        - id: aap2_user
+          type: string
+          label: "AAP2 Controller username"
+          secret: false
+        - id: aap2_pwd
+          type: string
+          label: "AAP2 Controller password"
+          secret: true
+      required:
+        - aap2_url
+        - aap2_user
+        - aap2_pwd
+    credential_type_injectors:
+      env:
+        CONTROLLER_HOST: !unsafe "{{ aap2_url }}"
+        CONTROLLER_USERNAME: !unsafe "{{ aap2_user }}"
+        CONTROLLER_PASSWORD: !unsafe "{{ aap2_pwd }}"
+    name: DevConf Demo - AAP2 Controller Credentials
+    credential_inputs:
+      aap2_url: "{{ aap2_controller_url }}"
+      aap2_user: "{{ aap2_controller_username }}"
+      aap2_pwd: "{{ aap2_controller_password }}"
+  # ------------------------------------
+  - credential_type: DevConf Demo - Dynatrace Auth
+    name: DevConf Demo - Dynatrace Credentials
+    credential_type_inputs:
+      fields:
+        - id: dynatrace_api_url
+          type: string
+          label: Dynatrace API URL
+          secret: false
+        - id: dynatrace_api_token
+          type: string
+          label: Dynatrace API Token
+          secret: true
+      required:
+        - dynatrace_api_url
+        - dynatrace_api_token
+    credential_type_injectors:
+      extra_vars:
+        dynatrace_api_url: !unsafe "{{ dynatrace_api_url }}"
+        dynatrace_api_token: !unsafe "{{ dynatrace_api_token }}"
+    credential_inputs:
+      dynatrace_api_url: "{{ dynatrace_url }}"
+      dynatrace_api_token: "{{ dynatrace_token }}"
+  # ------------------------------------
+  # ------------------------------------
+
+aap2_inventories:
+  - aap2_inventory_name: DevConf Demo - Insights Inventory
+  # ------------------------------------
+  - aap2_inventory_name: DevConf Demo - SCM Inventory
+  # ------------------------------------
+  # ------------------------------------
+
+aap2_inventory_sources:
+  - aap2_inventory_source_name: DevConf Demo - SCM Inventory Source
+    aap2_inventory_source_inventory: DevConf Demo - SCM Inventory
+    aap2_inventory_source_type: scm
+    aap2_inventory_source_project: "DevConf Demo"
+    aap2_inventory_source_path: inventory
+  # ------------------------------------
+  - aap2_inventory_source_name: DevConf Demo - Insights source
+    aap2_inventory_source_inventory: DevConf Demo - Insights Inventory
+    aap2_inventory_source_type: insights
+    aap2_inventory_source_credential: "DevConf Demo - Insights Credentials"
+    aap2_inventory_source_vars:
+      get_patches: true
+      get_tags: true
+      groups:
+        insights_hosts: insights_id != ''
+        patching: insights_patching.enabled
+        stale: insights_patching.stale
+        bug_patch: insights_patching.rhba_count > 0
+        security_patch: insights_patching.rhsa_count > 0
+        enhancement_patch: insights_patching.rhea_count > 0
+      keyed_groups:
+        - key: insights_tags['insights-client']['group']
+          separator: ""
+  # ------------------------------------
+  # ------------------------------------
+
+aap2_templates:
+  ### EDA ###
+  - aap2_template_name: "[EDA][Insights] Handle Advisories"
+    aap2_template_playbook: playbooks/insights_advisory_handle.yml
+    aap2_template_credentials:
+      - DevConf Demo - AAP2 Controller Credentials
+      - DevConf Demo - RHSM Credentials
+      - DevConf Demo - Linux Credentials
+    aap2_template_inventory: DevConf Demo - Insights Inventory
+    aap2_template_ask_vars: true
+    aap2_template_project: DevConf Demo
+    # ------------------------------------
+  - aap2_template_name: "[EDA][Alertmanager][OCP] - Report OCPVirtLowDisk alert"
+    aap2_template_playbook: playbooks/alertmanager_ocp_ocpvirtlowdisk_report.yml
+    aap2_template_inventory: DevConf Demo - SCM Inventory
+    aap2_template_ask_vars: true
+    aap2_template_credentials: "DevConf Demo - ServiceNow Credentials"
+    aap2_template_project: DevConf Demo
+    # ------------------------------------
+  - aap2_template_name: "[EDA][Alertmanager][OCP] - Resolve OCPVirtLowDisk alert"
+    aap2_template_playbook: playbooks/alertmanager_ocp_ocpvirtlowdisk_fix.yml
+    aap2_template_inventory: DevConf Demo - SCM Inventory
+    aap2_template_ask_vars: true
+    aap2_template_credentials: "DevConf Demo - Linux Credentials"
+    aap2_template_project: DevConf Demo
+  # ------------------------------------
+
+  # ------------------------------------
+  - aap2_template_name: "[EDA][Dynatrace] Open SNOW incident for problem"
+    aap2_template_playbook: playbooks/dynatrace_report.yml
+    aap2_template_ask_vars: true
+    aap2_template_credentials:
+      - DevConf Demo - ServiceNow Credentials
+    aap2_template_inventory: DevConf Demo - SCM Inventory
+    aap2_template_project: DevConf Demo
+  # ------------------------------------
+  - aap2_template_name: "[EDA][Dynatrace] Saturate VM CPU"
+    aap2_template_playbook: playbooks/dynatrace_cpu_saturation_trigger.yml
+    aap2_template_credentials:
+      - DevConf Demo - Linux Credentials
+    aap2_template_inventory: DevConf Demo - SCM Inventory
+    aap2_template_project: DevConf Demo
+  # ------------------------------------
+  - aap2_template_name: "[EDA][Dynatrace] Resolve CPU Saturation issue on VM"
+    aap2_template_playbook: playbooks/dynatrace_cpu_saturation_fix.yml
+    aap2_template_ask_vars: true
+    aap2_template_credentials:
+      - DevConf Demo - Linux Credentials
+    aap2_template_inventory: DevConf Demo - SCM Inventory
+    aap2_template_project: DevConf Demo
+  # ------------------------------------
+  - aap2_template_name: "[EDA][Dynatrace] Install OneAgent on VM"
+    aap2_template_playbook: playbooks/linux_install_dynatrace_agent.yml
+    aap2_template_credentials:
+      - DevConf Demo - Linux Credentials
+      - DevConf Demo - Dynatrace Credentials
+    aap2_template_inventory: DevConf Demo - SCM Inventory
+    aap2_template_project: DevConf Demo
+  # ------------------------------------
+
+  - aap2_template_name: "[EDA][OCP] Deploy VM on OCP"
+    aap2_template_playbook: playbooks/ocp_vm_deploy.yml
+    aap2_template_credentials:
+      - DevConf Demo - OCP Credentials
+    aap2_template_survey_spec: "{{ lookup('file', 'survey_templates/survey_spec_ocp_virt.json') }}"
+    aap2_template_survey_enabled: true
+    aap2_template_inventory: DevConf Demo - SCM Inventory
+    aap2_template_project: DevConf Demo
+  # ------------------------------------
+  - aap2_template_name: "[EDA][OCP] VM - Configure monitoring"
+    aap2_template_playbook: playbooks/ocp_vm_configure_monitoring.yml
+    aap2_template_credentials:
+      - DevConf Demo - OCP Credentials
+    aap2_template_inventory: DevConf Demo - SCM Inventory
+    aap2_template_project: DevConf Demo
+  # ------------------------------------
+  - aap2_template_name: "[EDA][OCP] Destroy VM on OCP"
+    aap2_template_playbook: playbooks/ocp_vm_destroy.yml
+    aap2_template_credentials:
+      - DevConf Demo - OCP Credentials
+    aap2_template_inventory: DevConf Demo - SCM Inventory
+    aap2_template_project: DevConf Demo
+  # ------------------------------------
+  # ------------------------------------
+
+  - aap2_template_name: "[EDA][Linux] Register RH VM"
+    aap2_template_playbook: playbooks/linux_subscribe_system.yml
+    aap2_template_ask_vars: true
+    aap2_template_credentials:
+      - "DevConf Demo - Linux Credentials"
+      - "DevConf Demo - RHSM Credentials"
+    aap2_template_inventory: DevConf Demo - SCM Inventory
+    aap2_template_project: DevConf Demo
+  # ------------------------------------
+  - aap2_template_name: "[EDA][Linux] Configure system with Insights"
+    aap2_template_playbook: playbooks/linux_insights_configure.yml
+    aap2_template_credentials: "DevConf Demo - Linux Credentials"
+    aap2_template_inventory: DevConf Demo - SCM Inventory
+    aap2_template_ask_vars: true
+    aap2_template_project: DevConf Demo
+  # ------------------------------------
+  - aap2_template_name: "[EDA][Linux] Configure node-exporter on VM"
+    aap2_template_playbook: playbooks/linux_configure_node_exporter.yml
+    aap2_template_ask_vars: true
+    aap2_template_credentials: "DevConf Demo - Linux Credentials"
+    aap2_template_inventory: DevConf Demo - SCM Inventory
+    aap2_template_project: DevConf Demo
+  # ------------------------------------
+  # ------------------------------------
+
+aap2_workflows:
+  - aap2_workflow_name: "[EDA][OCP] Create VM and configure monitoring"
+    aap2_workflow_project: DevConf Demo
+    aap2_workflow_survey_spec: "{{ lookup('file', 'survey_templates/survey_spec_ocp_virt.json') }}"
+    aap2_workflow_survey_enabled: true
+    aap2_workflow_nodes:
+      - node_name: ocp-vm-create
+        nodes_on_success:
+          - ocp-configure-monitoring
+        node_job_template: "[EDA][OCP] Deploy VM on OCP"
+      - node_name: ocp-configure-monitoring
+        node_job_template: "[EDA][OCP] VM - Configure monitoring"
+
+####### EDA CONTROLLER VARIABLES ########
+eda_projects:
+  - name: "DevConf Demo"
+    git_url: https://github.com/kubealex/devconf.cz-ansible-events
+    description: "Demo project to show EDA in action"
+eda_decision_envs:
+  - name: "kubealex-eda"
+    image_url: quay.io/kubealex/eda-decision-env
+
+eda_activations:
+  - name: eda-alertmanager
+    rulebook: eda-rulebook-alertmanager.yml
+    project_name: "DevConf Demo"
+    decision_env: "kubealex-eda"
+    controller_token: "AAP Controller"
+  - name: eda-insights
+    rulebook: eda-rulebook-insights.yml
+    project_name: "DevConf Demo"
+    decision_env: "kubealex-eda"
+    controller_token: "AAP Controller"
+  - name: eda-webhook
+    rulebook: eda-rulebook-webhook.yml
+    project_name: "DevConf Demo"
+    decision_env: "kubealex-eda"
+    controller_token: "AAP Controller"
+  - name: eda-dynatrace
+    rulebook: eda-rulebook-dynatrace.yml
+    project_name: "DevConf Demo"
+    decision_env: "kubealex-eda"
+    extra_vars: "dynatrace_api_url: {{ dynatrace_url }}\ndynatrace_api_token: {{ dynatrace_token }}"
+    controller_token: "AAP Controller"

@@ -1,0 +1,12 @@
+---
+- name: Linux hosts | Install Dynatrace OneAgent
+  hosts: "{{ target_hosts | default('rhel_demo_servers', true) }}"
+  become: true
+  roles:
+    - role: dynatrace.oneagent.oneagent
+      vars:
+        oneagent_environment_url: "{{ dynatrace_api_url }}"
+        oneagent_paas_token: "{{ dynatrace_paas_token }}"
+  tasks:
+    - name: Linux hosts | Reboot host
+      ansible.builtin.reboot:

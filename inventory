@@ -1,0 +1,6 @@
+localhost ansible_connection=local
+
+[rhel_demo_servers]
+rhel9-vm.rh-lab.labs
+
+rhel9-vm.rh-lab.labs
