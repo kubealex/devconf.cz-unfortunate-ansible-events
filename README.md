@@ -96,13 +96,14 @@ THe Dynatrace agent will monitor the VM we created and we will simulate a CPU sa
 
 #### Anomaly detection
 
-The controller device at the edge, deployed on Microshift sends the sensor information to a Kafka topic. As a result of an anomaly, the sensor data reveals an unexpected increase in the vibrations of the components of the controlled engine.
+We will simulate the CPU saturation VM event in the VM that is now running in OCP Virtualization, where we previously installed the Dynatrace agent.
+When the CPU usage reaches 100%, Dynatrace will generate a Problem reporting the issue, we will then use the API polling of the Event Driven Automation Source for Dynatrace to intercept the problem and react accordingly.
 
-A Kafka receiver, configure in Event Driven Automation Controller, is subscribed to the same topic and implements a logic that checks for vibration values over the threshold.
+To generate the issue we can use the template **[EDA][Dynatrace] Saturate VM CPU**, that will levarage openssl command to saturate the CPU of the VM.
 
 #### Reaction to the anomaly
 
-When the threshold condition is met, the remediation phase starts, immediately shutting down the engine and raising an Incident to notify the fault, to then proceed with a manual inspection on the device itself.
+After triggering the notification, EDA will anlalyze and enrich the information coming from Dynatrace, opening a Service Now request, resolve the issue and then proceed with the resolution of the Service Now ticket.
 
 ## Configuration
 
