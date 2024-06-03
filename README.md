@@ -12,6 +12,9 @@ In this repository you will find the instructions and configuration to replicate
   - [Remediating an alert from OCP Virtualization VM with Service Now and EDA](#remediating-an-alert-from-ocp-virtualization-vm-with-service-now-and-eda)
     - [Trigger OCPVirtLowDisk Alert](#trigger-ocpvirtlowdisk-alert)
     - [Report the incident on ITSM and resolve it](#report-the-incident-on-itsm-and-resolve-it)
+  - [Dynatrace reactive monitoring with EDA](#dynatrace-reactive-monitoring-with-eda)
+    - [CPU Usage Anomaly detection](#cpu-usage-anomaly-detection)
+    - [Reaction to the anomaly](#reaction-to-the-anomaly)
 - [Configuration](#configuration)
 - [Requirements](#requirements)
   - [Red Hat Openshift Container Platform](#red-hat-openshift-container-platform)
@@ -94,7 +97,7 @@ For the sake of the use case, it is a simple resolution removing the file that c
 The last use case will cover the reaction to an event on a monitored VM, specifically a CPU saturation.
 THe Dynatrace agent will monitor the VM we created and we will simulate a CPU saturation event.
 
-#### Anomaly detection
+#### CPU Usage Anomaly detection
 
 We will simulate the CPU saturation VM event in the VM that is now running in OCP Virtualization, where we previously installed the Dynatrace agent.
 When the CPU usage reaches 100%, Dynatrace will generate a Problem reporting the issue, we will then use the API polling of the Event Driven Automation Source for Dynatrace to intercept the problem and react accordingly.
